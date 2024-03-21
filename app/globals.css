@@ -1,0 +1,240 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::placeholder {
+  color: rgba(255, 255, 255, 0.74);
+  opacity: 1; /* Firefox */
+}
+
+::-ms-input-placeholder {
+  /* Edge 12 -18 */
+  color: rgba(255, 255, 255, 0.74);
+}
+
+body {
+  background-color: #05060e;
+  /* background-color: lightgray; */
+}
+
+textarea {
+  overflow-y: hidden;
+  resize: none;
+}
+
+/* animations */
+
+.smoothUI {
+  transition: all 0.3s ease-in-out;
+}
+.nestedSmoothUI * {
+  transition: all 0.3s ease-in-out;
+}
+.custom-p {
+  word-wrap: break-word;
+  max-width: 45vw !important;
+}
+
+/* CUSTOM SCROLL BAR */
+
+/* width */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #3939392c;
+  border-radius: 10px;
+}
+
+/* Handle */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #3a3a3a;
+}
+
+/* Handle on hover */
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #888787;
+}
+
+.gradient-text {
+  background: linear-gradient(
+    90deg,
+    #ff27c3 14.12%,
+    #2496ff 71.08% /* rgba(139, 186, 255, 0) 71.09% */
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* font-size: 64px; */
+  /* font-style: normal;
+    font-weight: 700;
+    line-height: normal; */
+}
+
+.button-border-gradient {
+  border: 1px solid linear-gradient(to right, #6b0485, #246ddc) !important;
+  box-shadow: 2px 0 0 0 linear-gradient(to right, #6b0485, #246ddc),
+    -2px 0 0 0 linear-gradient(to left, #6b0485, #246ddc) !important;
+}
+
+/* Button hovers */
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* .buttons {
+    margin: 10%;
+    text-align: center;
+} */
+
+.btn-hover {
+  /* width: 200px;
+    font-size: 16px;
+    font-weight: 600; */
+  /* color: #fff; */
+  cursor: pointer;
+  /* margin: 20px;
+    height: 55px; */
+  text-align: center;
+  /* border: none; */
+  background-size: 300% 100%;
+
+  /* border-radius: 50px; */
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+
+.btn-hover:hover {
+  background-position: 100% 0;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+
+.btn-hover:focus {
+  outline: none;
+}
+
+.btn-hover.color-1 {
+  background-image: linear-gradient(
+    to right,
+    #1d0024,
+    #1d0024,
+    #d30051,
+    #6600aa
+  );
+}
+.btn-hover.color-2 {
+  background-image: linear-gradient(
+    to right,
+    #1d0024,
+    #1d0024,
+    #d30051,
+    #6600aa
+  );
+}
+
+.btn-hover.color-3 {
+  background-image: linear-gradient(
+    to right,
+    #6b0485,
+    #1d0224,
+    #ff27c3,
+    #8bbaff
+  );
+}
+.btn-hover.color-4 {
+  background-image: linear-gradient(
+    to right,
+    #1d0024,
+    #1d0024,
+    #1a1a1a,
+    #1a1a1a
+  );
+}
+/* Dropzone css */
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: dashed 3px #ccc;
+  border-radius: 1rem;
+  padding: 2rem;
+}
+
+.active {
+  border: dashed 3px dodgerblue;
+}
+
+.uploadMessage h3 {
+  margin-top: 1rem;
+}
+
+.files {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute !important;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.files + label {
+  margin-top: 1rem;
+  background-color: #0d6efd;
+  border-radius: 4rem;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  text-align: center;
+  user-select: none;
+}
+
+.files + label:focus,
+.files + label:hover {
+  background-color: #0a58ca;
+  color: #fff;
+}
+
+.files + label:focus {
+  outline: 1px dotted #fff;
+}
+
+.uploadBtn {
+  width: auto;
+  color: white;
+  text-transform: uppercase;
+  margin: 2rem;
+  background-color: #0d6efd;
+  border-radius: 4rem;
+  cursor: pointer;
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.fileList {
+  display: flex;
+  margin-top: 1rem;
+  gap: 1rem;
+  width: 400px;
+}
+
+.fileContainer {
+  flex-direction: column;
+  align-items: center;
+}
+
+.fileName {
+  margin-left: 2rem;
+}
