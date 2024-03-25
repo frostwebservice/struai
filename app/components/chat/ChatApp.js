@@ -27,10 +27,10 @@ function ChatApp() {
   const [showSidebar, setShowSidebar] = useState(false);
   const [response, setResponse] = useState("");
   const [submittedPrompt, setSubmittedPrompt] = useState("");
-
+  const [right, setRight] = useState(false);
   const user = useAuthStore((state) => state.user);
   const isLoggedIn = Boolean(user?.email);
-
+  const [first, setFirst] = useState(false);
   useChat(submittedPrompt, response, setResponse);
 
   const clearPromptAndResponse = () => {
@@ -46,6 +46,7 @@ function ChatApp() {
         disableSidebar={Boolean(response?.length)}
         hide={showModel || !isLoggedIn}
         clearPromptAndResponse={clearPromptAndResponse}
+        setFirst={setFirst}
         open={showSidebar}
         setOpen={setShowSidebar}
       />
@@ -68,8 +69,13 @@ function ChatApp() {
             <ChatBody
               isLoggedIn={isLoggedIn}
               promptResponse={response}
-              open={showSidebar}
+              open={right}
+              setRight={setRight}
+              first={first}
+              user={user}
+              setFirst={setFirst}
               showModel={showModel}
+              setSubmittedPrompt={setSubmittedPrompt}
               setModel={setModel}
               setResponse={setResponse}
             />
@@ -77,16 +83,18 @@ function ChatApp() {
               isLoggedIn={isLoggedIn}
               setModel={setModel}
               user={user}
+              setFirst={setFirst}
               open={showSidebar}
               promptResponse={response}
               setSubmittedPrompt={setSubmittedPrompt}
             />
           </article>
-          <ModelInterface
+          {/* <ModelInterface
             // open={showModel}
+            first={first}
             open={false}
             handleClose={() => setModel(false)}
-          />
+          /> */}
         </div>
       </div>
     </ChatAppWrapper>

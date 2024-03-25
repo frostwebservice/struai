@@ -1,10 +1,41 @@
 import React from "react";
 import Image from "next/image";
 import FilePreview from "./FilePreview";
-// const fs = require("fs");
-const axios = require("axios");
-// const FormData = require("form-data");
-const DropZone = ({ data, dispatch }) => {
+
+import Input from "@/app/components/ui/Input";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+import model3d from "@/app/assets/icons/3d-model 1.svg";
+import sendIcon from "@/app/assets/icons/chatSend.svg";
+import excel from "@/app/assets/icons/excel 1.svg";
+
+import { fetchData } from "@/app/apiHandler/api";
+import { useChatStore } from "@/app/store/store";
+import { twMerge } from "tailwind-merge";
+import { v4 as uuidv4 } from "uuid";
+import getFormattedDateTime from "@/app/utils/getFormattedDate";
+import { Modal } from "next-modal";
+import axios from "axios";
+import { Mulish } from "next/font/google";
+
+const DropZone = ({
+  data,
+  setFirst = null,
+  user,
+  setSubmittedPrompt,
+  dispatch,
+  setRight,
+}) => {
+  const currentChatInstance = useChatStore(
+    (state) => state.currentChatInstance
+  );
+  const setChatInstances = useChatStore((state) => state.setChatInstances);
+  const addChatInstance = useChatStore((state) => state.addChatInstance);
+  const addmessageToChat = useChatStore((state) => state.addMessageToChat);
+
+  const setCurrentChatInstance = useChatStore(
+    (state) => state.setCurrentChatInstance
+  );
   // onDragEnter sets inDropZone to true
   const handleDragEnter = (e) => {
     e.preventDefault();
@@ -52,6 +83,20 @@ const DropZone = ({ data, dispatch }) => {
       dispatch({ type: "SET_IN_DROP_ZONE", inDropZone: false });
     }
   };
+  const editChatInstanceTitle = useChatStore(
+    (state) => state.editChatInstanceTitle
+  );
+  const setTitleOfNewInstace = useCallback(
+    async (sessionID) => {
+      const title = await fetchData({
+        userID: user?.email,
+        sessionID,
+        getAnswer: "get-title",
+      });
+      editChatInstanceTitle(sessionID, title);
+    },
+    [editChatInstanceTitle, user?.email]
+  );
   // to handle file uploads
   const uploadFiles = async () => {
     // get the files from the fileList as an array
@@ -62,41 +107,65 @@ const DropZone = ({ data, dispatch }) => {
     // files.forEach((file) => formData.append("files", file));
     formData.append("file", files[0]);
 
-    // Upload the files as a POST request to the server using fetch
-    // Note: /api/fileupload is not a real endpoint, it is just an example
-    const response = await fetch("https://ashva.pythonanywhere.com/upload", {
-      method: "POST",
-      body: formData,
-    })
-      // axios
-      //   .post("https://ashva.pythonanywhere.com/upload", formData, {
-      //     headers: {
-      //       ...formData.getHeaders(),
-      //     },
-      //     data: mdata,
-      //   })
+    axios
+      .post(
+        "https://ashva.pythonanywhere.com/upload?userID=bhoshaga@gmail.com",
+        formData
+      )
       .then((response) => {
         const resp = response.data;
-        console.log(resp); // Full response by server, dictionary with keys: status, message, status_code, server_response, filename
+        console.log(resp.message[0].message); // Full response by server, dictionary with keys: status, message, status_code, server_response, filename
 
-        console.log(resp.message); // this is the AI chatbot response
-        console.log(resp.server_response); // three js model provided by server, this is what we want
+        let newChat = !currentChatInstance;
+
+        const sessionID = currentChatInstance || uuidv4();
+        console.log("sessionID", sessionID);
+        // process the data - set input disabled - form disabled
+        // setProcessing(true);
+        if (!currentChatInstance) {
+          // new chat - new session id
+          console.log("this is new");
+          setCurrentChatInstance(sessionID);
+
+          addChatInstance({
+            sessionID,
+            title: "",
+            date: getFormattedDateTime(),
+            messages: [
+              {
+                role: "user",
+                content: "A new file uploaded to server",
+              },
+            ],
+          });
+
+          // addmessageToChat({
+          //   role: "assistant",
+          //   content: resp.message[0].message,
+          // });
+        } else {
+          // existing chat - add message to the current instance
+
+          addmessageToChat({
+            role: "user",
+            content: "A new file uploaded to server",
+          });
+          // addmessageToChat({
+          //   role: "assistant",
+          //   content: resp.message[0].message,
+          // });
+        }
+        setSubmittedPrompt("A new file uploaded to server");
+        if (newChat) {
+          // get title from server
+          setTimeout(() => {
+            setTitleOfNewInstace(sessionID);
+          }, 3000);
+          // setModel(true);
+        }
+        if (setFirst != null) setFirst(true);
+        setRight(true);
       });
-
-    // // Upload the files as a POST request to the server using fetch
-    // // Note: /api/fileupload is not a real endpoint, it is just an example
-    // const response = await fetch("/api/fileupload", {
-    //   method: "POST",
-    //   body: formData,
-    // });
-
-    // //successful file upload
-    // if (response.ok) {
-    //   alert("Files uploaded successfully");
-    // } else {
-    //   // unsuccessful file upload
-    //   alert("Error uploading files");
-    // }
   };
   return (
     <>
@@ -114,9 +183,12 @@ const DropZone = ({ data, dispatch }) => {
         </h3>
         <Image src="/img4.png" alt="upload" height={50} width={50} />
       </div>
-      <FilePreview fileData={data} />
+      {/* <FilePreview fileData={data} /> */}
       {data.fileList.length > 0 && (
-        <button className="uploadBtn" onClick={uploadFiles}>
+        <button
+          className="uploadBtn !mx-0 !w-full !max-w-[400px]"
+          onClick={uploadFiles}
+        >
           Upload
         </button>
       )}

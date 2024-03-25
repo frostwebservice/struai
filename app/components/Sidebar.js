@@ -28,6 +28,7 @@ const SidebarCard = ({
   sessionID,
   disableSidebar,
   active = false,
+  setFirst,
   clearPromptAndResponse,
   setOpen,
 }) => {
@@ -136,6 +137,7 @@ const SidebarCard = ({
         setCurrentChatInstance(null);
         // remove the chat instance from store
         removeChatInstance(sessionID);
+        setFirst(false);
       }
     },
     [removeChatInstance, sessionID, setCurrentChatInstance, user?.email]
@@ -212,6 +214,7 @@ function Sidebar(props) {
     clearPromptAndResponse = () => {},
     open,
     setOpen,
+    setFirst,
   } = props;
   // useTracer(props);
   const user = useAuthStore((state) => state.user);
@@ -237,6 +240,7 @@ function Sidebar(props) {
   const handleNewChat = useCallback(() => {
     // clear current instance id
     clearCurrentChatInstance();
+    setFirst(false);
     // clear current messages
     // useChatStore.getState().clearCurrentChatMessages();
   }, [clearCurrentChatInstance]);
@@ -333,6 +337,7 @@ function Sidebar(props) {
                 title={item.title}
                 sessionID={item.sessionID}
                 open={open}
+                setFirst={setFirst}
                 clearPromptAndResponse={clearPromptAndResponse}
                 setOpen={setOpen}
               />
